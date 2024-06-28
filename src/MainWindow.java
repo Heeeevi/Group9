@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException; //Faris
 import java.util.ArrayList;
 
 public class MainWindow {
@@ -40,7 +41,8 @@ public class MainWindow {
         rollDiceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rollDice();
+                Player currentPlayer = game.getPlayers().get(currentPlayerIndex); //Faris
+                rollDiceAnimation(currentPlayer); //Faris
             }
         });
         panel.add(rollDiceButton, BorderLayout.SOUTH);
@@ -102,6 +104,25 @@ public class MainWindow {
             rollDiceButton.setEnabled(false);
             statusLabel.setText("The winner is " + currentPlayer.getName() + "!");
         }
+    }
+
+    //Simulasi animasi Dice Roll (dadu) -- Faris
+    private void rollDiceAnimation(Player currentPlayer){
+        Timer timer = new Timer(100, new ActionListener() {
+            int count = 0;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (count < 10){
+                    int randomRoll = (int) (Math.random() * 6) + 1;
+                    statusLabel.setText(currentPlayer.getName() + " rolled a " + randomRoll);
+                    count++;
+                } else {
+                    ((Timer) e.getSource()).stop();
+                    rollDice();
+                }
+            }
+        });
+        timer.start();
     }
 
     private int getBoardSizeFromUser() {
